@@ -1,4 +1,8 @@
 import pdb
+import lxml.html
+import time
+from urllib2 import urlopen
+import os
 
 class Cell:
   def __init__(self, value):
@@ -9,11 +13,39 @@ class Cell:
     return str(self.value)
 
 
+class Generator:
+  def __init__(self, difficulty = 2):
+    self.difficulty = str(difficulty)
+    self.boardarray = [] 
+
+  def __repr__(self):
+    return str(self.boardarray)
+
+  def generate(self):
+    html = urlopen("http://www.free-sudoku.com/sudoku.php?mode=%s" % (self.difficulty)).read()
+    tree = lxml.html.fromstring(html)
+
+    for i in range(81):
+      i += 1
+      self.boardarray.append(tree.get_element_by_id(str(i)).text_content())
+
+    newarray = []
+    for e in self.boardarray:
+      if e == '':
+        newarray.append('0')
+      else:
+        newarray.append(e)
+    self.boardarray = ''.join(newarray)
+
+
 class Board:
-  def __init__(self, boardstring='000000000111111111222222222333333333444444444555555555666666666777777777888888888'):
-    self.boardstring = boardstring
+  def __init__(self):
     self.boardstring = '619030040270061008000047621486302079000014580031009060005720806320106057160400030'
+    x = Generator()
+    x.generate()
+    self.boardstring = str(x)
     self.setup()
+
 
   def setup(self):
     self.cells = list(self.boardstring)
@@ -66,25 +98,37 @@ class Board:
         for row in self.rows:
           if cell in row:
             for cell2 in row:
-              if cell2.value in cell.possibilities: 
+              if cell2.value in cell.possibilities:
                 cell.possibilities.remove(cell2.value)
 
         for column in self.columns:
-          if cell in column: 
+          if cell in column:
             for cell2 in column:
               if cell2.value in cell.possibilities:
                 cell.possibilities.remove(cell2.value)
 
         for square in self.squares:
-          if cell in square: 
+          if cell in square:
             for cell2 in square:
               if cell2.value in cell.possibilities:
                 cell.possibilities.remove(cell2.value)
 
       if len(cell.possibilities) == 1:
         cell.value =  cell.possibilities.pop()
+        os.system('clear')
+        self.ugly_print()
+        time.sleep(0.5)
 
 
 x = Board()
 x.simple_solve()
-pdb.set_trace()
+x.simple_solve()
+x.simple_solve()
+x.simple_solve()
+x.simple_solve()
+x.simple_solve()
+x.simple_solve()
+x.simple_solve()
+x.simple_solve()
+
+# pdb.set_trace()
