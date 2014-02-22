@@ -42,6 +42,23 @@ class Board:
           self.squares[i + 2].append(cell)
 
 
+  def ugly_print(self):
+    line = "---------------------------------------------------"
+
+    print line
+    for i in range(3):
+      print ' '.join([str(x) for x in self.rows[i]])
+    print line
+    for i in range(3):
+      print ' '.join([str(x) for x in self.rows[i + 3]])
+    print line
+    for i in range(3):
+      print ' '.join([str(x) for x in self.rows[i + 6]])
+    print line
+
+
+
+
   def simple_solve(self):
     for cell in self.cells:
       if cell.value == 0:
