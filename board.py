@@ -12,7 +12,6 @@ class Cell:
   def __repr__(self):
     return str(self.value)
 
-
 class Generator:
   def __init__(self, difficulty = 2):
     self.difficulty = str(difficulty)
@@ -36,7 +35,6 @@ class Generator:
       else:
         newarray.append(e)
     self.boardarray = ''.join(newarray)
-
 
 class Board:
   def __init__(self):
@@ -115,7 +113,7 @@ class Board:
         cell.value =  cell.possibilities.pop()
         os.system('clear')
         x.ugly_print()
-        time.sleep(0.5)
+        time.sleep(0.2)
 
   def smart_solve(self):
     for cell in self.cells:
@@ -124,16 +122,35 @@ class Board:
         for square in self.squares:
           if cell in square:
             for cell2 in square:
-              if cell2.value == 0 and sorted(cell2.possibilities) == sorted(cell.possibilities):
+              if cell2.value == 0 and sorted(cell2.possibilities) == sorted(cell.possibilities) and cell2 != cell:
                 change = True
-              for cell3 in square:
-                if cell3.value == 0 and cell3 != (cell2 or cell) and len(cell3.possibilities) == 2 and change == True:
-                  cell3.possibilities = list(set(cell3.possibilities) - set(cell.possibilities))
-                  # cell3.value = '*' + str(len(cell.possibilities))
+            for cell3 in square:
+              if cell3.value == 0 and cell3 != (cell2 or cell) and len(cell2.possibilities) == 2 and change == True:
+                cell3.possibilities = list(set(cell3.possibilities) - set(cell.possibilities))
+                # cell3.value = '*' + str(len(cell.possibilities))
               change=False
 
+        for square in self.columns:
+          if cell in square:
+            for cell2 in square:
+              if cell2.value == 0 and sorted(cell2.possibilities) == sorted(cell.possibilities) and cell2 != cell:
+                change = True
+            for cell3 in square:
+              if cell3.value == 0 and cell3 != (cell2 or cell) and len(cell2.possibilities) == 2 and change == True:
+                cell3.possibilities = list(set(cell3.possibilities) - set(cell.possibilities))
+                # cell3.value = '*' + str(len(cell.possibilities))
+              change=False
 
-
+        for square in self.columns:
+          if cell in square:
+            for cell2 in square:
+              if cell2.value == 0 and sorted(cell2.possibilities) == sorted(cell.possibilities) and cell2 != cell:
+                change = True
+            for cell3 in square:
+              if cell3.value == 0 and cell3 != (cell2 or cell) and len(cell2.possibilities) == 2 and change == True:
+                cell3.possibilities = list(set(cell3.possibilities) - set(cell.possibilities))
+                # cell3.value = '*' + str(len(cell.possibilities))
+              change=False
 
 x = Board()
 
@@ -144,3 +161,8 @@ x = Board()
 while 0 in [cell.value for cell in x.cells]:
   x.simple_solve()
   x.smart_solve()
+
+if 0 not in [cell.value for cell in x.cells]:
+  print "Yatta!"
+
+# x.ugly_print()
