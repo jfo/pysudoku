@@ -89,8 +89,6 @@ class Board:
     print line
 
 
-
-
   def simple_solve(self):
     for cell in self.cells:
       if cell.value == 0:
@@ -116,19 +114,33 @@ class Board:
       if len(cell.possibilities) == 1:
         cell.value =  cell.possibilities.pop()
         os.system('clear')
-        self.ugly_print()
+        x.ugly_print()
         time.sleep(0.5)
+
+  def smart_solve(self):
+    for cell in self.cells:
+      if cell.value == 0:
+        change = False
+        for square in self.squares:
+          if cell in square:
+            for cell2 in square:
+              if cell2.value == 0 and sorted(cell2.possibilities) == sorted(cell.possibilities):
+                change = True
+              for cell3 in square:
+                if cell3.value == 0 and cell3 != (cell2 or cell) and len(cell3.possibilities) == 2 and change == True:
+                  cell3.possibilities = list(set(cell3.possibilities) - set(cell.possibilities))
+                  # cell3.value = '*' + str(len(cell.possibilities))
+              change=False
+
+
 
 
 x = Board()
-x.simple_solve()
-x.simple_solve()
-x.simple_solve()
-x.simple_solve()
-x.simple_solve()
-x.simple_solve()
-x.simple_solve()
-x.simple_solve()
-x.simple_solve()
+
 
 # pdb.set_trace()
+
+
+while 0 in [cell.value for cell in x.cells]:
+  x.simple_solve()
+  x.smart_solve()
